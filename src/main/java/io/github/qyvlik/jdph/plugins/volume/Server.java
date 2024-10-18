@@ -19,74 +19,74 @@ public class Server {
             var req = ctx.read(CreateRequest.class);
             var err = this.driver.Create(req);
             if (err != null) {
-                ctx.write(500, err);
+                ctx.write(err);
                 return;
             }
-            ctx.write(200, Map.of());
+            ctx.write(Map.of());
         });
 
         container.add("/VolumeDriver.Get", ctx -> {
             var req = ctx.read(GetRequest.class);
             var ret = this.driver.Get(req);
             if (ret.err() != null) {
-                ctx.write(500, ret.err());
+                ctx.write(ret.err());
                 return;
             }
-            ctx.write(200, ret.result());
+            ctx.write(ret.result());
         });
 
         container.add("/VolumeDriver.List", ctx -> {
             var ret = this.driver.List();
             if (ret.err() != null) {
-                ctx.write(500, ret.err());
+                ctx.write(ret.err());
                 return;
             }
-            ctx.write(200, ret.result());
+            ctx.write(ret.result());
         });
 
         container.add("/VolumeDriver.Remove", ctx -> {
             var r = ctx.read(RemoveRequest.class);
             var err = this.driver.Remove(r);
             if (err != null) {
-                ctx.write(500, err);
+                ctx.write(err);
                 return;
             }
-            ctx.write(200, Map.of());
+            ctx.write(Map.of());
         });
 
         container.add("/VolumeDriver.Path", ctx -> {
             var req = ctx.read(PathRequest.class);
             var ret = this.driver.Path(req);
             if (ret.err() != null) {
-                ctx.write(500, ret.err());
+                ctx.write(ret.err());
                 return;
             }
-            ctx.write(200, Map.of());
+            ctx.write(Map.of());
         });
 
         container.add("/VolumeDriver.Mount", ctx -> {
             var req = ctx.read(MountRequest.class);
             var ret = this.driver.Mount(req);
             if (ret.err() != null) {
-                ctx.write(500, ret.err());
+                ctx.write(ret.err());
                 return;
             }
-            ctx.write(200, ret.result());
+            ctx.write(ret.result());
         });
 
         container.add("/VolumeDriver.Unmount", ctx -> {
             var r = ctx.read(UnmountRequest.class);
             var err = this.driver.Unmount(r);
             if (err != null) {
-                ctx.write(500, err);
+                ctx.write(err);
                 return;
             }
-            ctx.write(200, Map.of());
+            ctx.write(Map.of());
         });
 
         container.add("/VolumeDriver.Capabilities", ctx -> {
             var resp = this.driver.Capabilities();
-            ctx.write(200, resp);
+            ctx.write(resp);
         });
     }
 
