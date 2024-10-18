@@ -1,108 +1,99 @@
 package io.github.qyvlik.jdph.plugins.volume;
 
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import io.github.qyvlik.jdph.plugins.sdk.IServerHandler;
 import io.github.qyvlik.jdph.plugins.volume.req.*;
-import io.javalin.Javalin;
-import io.javalin.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.Executor;
 
 public class Server {
-
     private final Driver driver;
-    private Javalin server;
+    private final Map<String, IServerHandler> handlers;
 
-
-    public Server(final Driver driver, final InetSocketAddress address) throws IOException {
+    public Server(final Driver driver) {
         this.driver = driver;
-    }
-
-    public void initMux() {
-
-        this.server = Javalin.create(/*config*/);
-
-        this.server.post("/VolumeDriver.Create", ctx -> {
-            var req = ctx.bodyAsClass(CreateRequest.class);
+        this.handlers = new TreeMap<>();
+        this.handlers.put("/VolumeDriver.Create", ctx -> {
+            var req = ctx.read(CreateRequest.class);
             var err = this.driver.Create(req);
             if (err != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(err);
+                ctx.write(500, err);
                 return;
             }
-            ctx.json(Map.of());
+            ctx.write(200, Map.of());
         });
 
-        this.server.post("/VolumeDriver.Get", ctx -> {
-            var req = ctx.bodyAsClass(GetRequest.class);
+        this.handlers.put("/VolumeDriver.Get", ctx -> {
+            var req = ctx.read(GetRequest.class);
             var ret = this.driver.Get(req);
             if (ret.err() != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(ret.err());
+                ctx.write(500, ret.err());
                 return;
             }
-            ctx.json(ret.result());
+            ctx.write(200, ret.result());
         });
 
-        this.server.post("/VolumeDriver.List", ctx -> {
+        this.handlers.put("/VolumeDriver.List", ctx -> {
             var ret = this.driver.List();
             if (ret.err() != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(ret.err());
+                ctx.write(500, ret.err());
                 return;
             }
-            ctx.json(ret.result());
+            ctx.write(200, ret.result());
         });
 
-        this.server.post("/VolumeDriver.Remove", ctx -> {
-            var r = ctx.bodyAsClass(RemoveRequest.class);
+        this.handlers.put("/VolumeDriver.Remove", ctx -> {
+            var r = ctx.read(RemoveRequest.class);
             var err = this.driver.Remove(r);
             if (err != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(err);
+                ctx.write(500, err);
                 return;
             }
-            ctx.json(Map.of());
+            ctx.write(200, Map.of());
         });
 
-        this.server.post("/VolumeDriver.Path", ctx -> {
-            var req = ctx.bodyAsClass(PathRequest.class);
+        this.handlers.put("/VolumeDriver.Path", ctx -> {
+            var req = ctx.read(PathRequest.class);
             var ret = this.driver.Path(req);
             if (ret.err() != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(ret.err());
+                ctx.write(500, ret.err());
                 return;
             }
-            ctx.json(Map.of());
+            ctx.write(200, Map.of());
         });
 
-        this.server.post("/VolumeDriver.Mount", ctx -> {
-            var req = ctx.bodyAsClass(MountRequest.class);
+        this.handlers.put("/VolumeDriver.Mount", ctx -> {
+            var req = ctx.read(MountRequest.class);
             var ret = this.driver.Mount(req);
             if (ret.err() != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(ret.err());
+                ctx.write(500, ret.err());
                 return;
             }
-            ctx.json(ret.result());
+            ctx.write(200, ret.result());
         });
 
-        this.server.post("/VolumeDriver.Unmount", ctx -> {
-            var r = ctx.bodyAsClass(UnmountRequest.class);
+        this.handlers.put("/VolumeDriver.Unmount", ctx -> {
+            var r = ctx.read(UnmountRequest.class);
             var err = this.driver.Unmount(r);
             if (err != null) {
-                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                ctx.json(err);
+                ctx.write(500, err);
                 return;
             }
-            ctx.json(Map.of());
+            ctx.write(200, Map.of());
         });
 
-        this.server.post("/VolumeDriver.Capabilities", ctx -> {
+        this.handlers.put("/VolumeDriver.Capabilities", ctx -> {
             var resp = this.driver.Capabilities();
-            ctx.json(resp);
+            ctx.write(200, resp);
         });
-
     }
 
+    public void start() {
+    }
 }
