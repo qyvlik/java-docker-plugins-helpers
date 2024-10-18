@@ -6,7 +6,8 @@ import java.net.UnixDomainSocketAddress;
 import java.util.Map;
 
 public interface IWebContainer {
-    void handle(Map<String, IServerHandler> handlers);
+
+    void add(String path, IServerHandler handler);
 
     void start(InetSocketAddress address) throws IOException;
 

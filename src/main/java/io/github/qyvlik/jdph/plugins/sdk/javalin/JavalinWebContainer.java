@@ -19,13 +19,11 @@ public class JavalinWebContainer implements IWebContainer {
         javalin = Javalin.create();
     }
 
-    public void handle(Map<String, IServerHandler> handlers) {
-        for (Map.Entry<String, IServerHandler> entry : handlers.entrySet()) {
-            String path = entry.getKey();
-            var handler = entry.getValue();
-            javalin.post(path, (ctx -> handler.handle(this.warp(ctx))));
-        }
+    @Override
+    public void add(String path, IServerHandler handler) {
+        javalin.post(path, (ctx -> handler.handle(this.warp(ctx))));
     }
+
 
     @Override
     public void start(InetSocketAddress address) throws IOException {

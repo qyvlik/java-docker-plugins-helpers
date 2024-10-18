@@ -1,25 +1,21 @@
 package io.github.qyvlik.jdph.plugins.volume;
 
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import io.github.qyvlik.jdph.plugins.sdk.IServerHandler;
+import io.github.qyvlik.jdph.plugins.sdk.IWebContainer;
 import io.github.qyvlik.jdph.plugins.volume.req.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.UnixDomainSocketAddress;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.Executor;
 
 public class Server {
     private final Driver driver;
-    private final Map<String, IServerHandler> handlers;
+    private final IWebContainer container;
 
-    public Server(final Driver driver) {
+    public Server(final Driver driver, final IWebContainer container) {
         this.driver = driver;
-        this.handlers = new TreeMap<>();
-        this.handlers.put("/VolumeDriver.Create", ctx -> {
+        this.container = container;
+        container.add("/VolumeDriver.Create", ctx -> {
             var req = ctx.read(CreateRequest.class);
             var err = this.driver.Create(req);
             if (err != null) {
@@ -29,7 +25,7 @@ public class Server {
             ctx.write(200, Map.of());
         });
 
-        this.handlers.put("/VolumeDriver.Get", ctx -> {
+        container.add("/VolumeDriver.Get", ctx -> {
             var req = ctx.read(GetRequest.class);
             var ret = this.driver.Get(req);
             if (ret.err() != null) {
@@ -39,7 +35,7 @@ public class Server {
             ctx.write(200, ret.result());
         });
 
-        this.handlers.put("/VolumeDriver.List", ctx -> {
+        container.add("/VolumeDriver.List", ctx -> {
             var ret = this.driver.List();
             if (ret.err() != null) {
                 ctx.write(500, ret.err());
@@ -48,7 +44,7 @@ public class Server {
             ctx.write(200, ret.result());
         });
 
-        this.handlers.put("/VolumeDriver.Remove", ctx -> {
+        container.add("/VolumeDriver.Remove", ctx -> {
             var r = ctx.read(RemoveRequest.class);
             var err = this.driver.Remove(r);
             if (err != null) {
@@ -58,7 +54,7 @@ public class Server {
             ctx.write(200, Map.of());
         });
 
-        this.handlers.put("/VolumeDriver.Path", ctx -> {
+        container.add("/VolumeDriver.Path", ctx -> {
             var req = ctx.read(PathRequest.class);
             var ret = this.driver.Path(req);
             if (ret.err() != null) {
@@ -68,7 +64,7 @@ public class Server {
             ctx.write(200, Map.of());
         });
 
-        this.handlers.put("/VolumeDriver.Mount", ctx -> {
+        container.add("/VolumeDriver.Mount", ctx -> {
             var req = ctx.read(MountRequest.class);
             var ret = this.driver.Mount(req);
             if (ret.err() != null) {
@@ -78,7 +74,7 @@ public class Server {
             ctx.write(200, ret.result());
         });
 
-        this.handlers.put("/VolumeDriver.Unmount", ctx -> {
+        container.add("/VolumeDriver.Unmount", ctx -> {
             var r = ctx.read(UnmountRequest.class);
             var err = this.driver.Unmount(r);
             if (err != null) {
@@ -88,12 +84,17 @@ public class Server {
             ctx.write(200, Map.of());
         });
 
-        this.handlers.put("/VolumeDriver.Capabilities", ctx -> {
+        container.add("/VolumeDriver.Capabilities", ctx -> {
             var resp = this.driver.Capabilities();
             ctx.write(200, resp);
         });
     }
 
-    public void start() {
+    public void start(InetSocketAddress address) throws IOException {
+        this.container.start(address);
+    }
+
+    public void start(UnixDomainSocketAddress address) throws IOException {
+        this.container.start(address);
     }
 }
