@@ -1,4 +1,4 @@
-package io.github.qyvlik.jdph;
+package io.github.qyvlik.jdph.examples.volume;
 
 import io.github.qyvlik.jdph.go.error;
 import io.github.qyvlik.jdph.go.ret;
@@ -10,7 +10,7 @@ import io.github.qyvlik.jdph.plugins.volume.resp.*;
 
 import java.util.*;
 
-public class TestVolumeDriver implements Driver {
+public class ExampleVolumeDriver implements Driver {
     private Set<String> volumes;
     private int create;
     private int get;
@@ -21,7 +21,7 @@ public class TestVolumeDriver implements Driver {
     private int remove;
     private int capabilities;
 
-    public TestVolumeDriver() {
+    public ExampleVolumeDriver() {
         this.volumes = new TreeSet<>();
         this.create = 0;
         this.get = 0;

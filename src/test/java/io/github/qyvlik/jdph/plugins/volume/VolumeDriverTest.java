@@ -1,6 +1,6 @@
 package io.github.qyvlik.jdph.plugins.volume;
 
-import io.github.qyvlik.jdph.TestVolumeDriver;
+import io.github.qyvlik.jdph.examples.volume.ExampleVolumeDriver;
 import io.github.qyvlik.jdph.plugins.sdk.javalin.JavalinWebContainer;
 //import io.javalin.event.HandlerMetaInfo;
 //import io.javalin.event.LifecycleEventListener;
@@ -15,7 +15,7 @@ import java.net.http.HttpRequest;
 public class VolumeDriverTest {
     @Test
     public void test() throws IOException, InterruptedException {
-        Server server = new Server(new TestVolumeDriver(), new JavalinWebContainer(config->{
+        Server server = new Server(new ExampleVolumeDriver(), new JavalinWebContainer(config->{
             config.useVirtualThreads = true;
             config.showJavalinBanner = false;
         }));
