@@ -5,7 +5,10 @@ import io.github.qyvlik.jdph.plugins.sdk.IServerContext;
 import io.github.qyvlik.jdph.plugins.sdk.IServerHandler;
 import io.github.qyvlik.jdph.plugins.sdk.IWebContainer;
 import io.github.qyvlik.jdph.plugins.volume.resp.ErrorResponse;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.ext.web.Router;
@@ -21,7 +24,10 @@ public class VertxWebContainer implements IWebContainer {
     private final Router router;
 
     public VertxWebContainer() {
-        Vertx vertx = Vertx.vertx();
+        Vertx vertx = Vertx.vertx(
+                new VertxOptions()
+                .setPreferNativeTransport(true)
+        );
         this.server = vertx.createHttpServer();
         this.router = Router.router(vertx);
         this.router.get("/").handler(ctx ->
@@ -71,6 +77,38 @@ public class VertxWebContainer implements IWebContainer {
 
     @Override
     public void start(UnixDomainSocketAddress address) throws IOException {
-        server.requestHandler(router).listen(SocketAddress.domainSocketAddress(address.toString()));
+//        server.requestHandler(router).listen(SocketAddress.domainSocketAddress(address.toString()));
+
+        server.requestHandler(router)
+                .listen(SocketAddress.domainSocketAddress("/tmp/jdph.sock"))
+                .andThen(new Handler<AsyncResult<HttpServer>>() {
+                    @Override
+                    public void handle(AsyncResult<HttpServer> event) {
+                        if (event.failed()) {
+                            event.cause().printStackTrace();
+                        }
+                    }
+                })
+        ;
     }
 }
+
+/*
+
+curl \
+--unix-socket /tmp/jdph.sock \
+--location 'http://localhost:8080/VolumeDriver.Create' \
+--header 'Content-Type: application/json' \
+--data '{
+    "Name": "Hello"
+}'
+
+curl \
+--unix-socket /tmp/jdph.sock \
+--location 'http://localhost:8080/VolumeDriver.Get' \
+--header 'Content-Type: application/json' \
+--data '{
+    "Name": "Hello"
+}'
+
+ */
