@@ -236,6 +236,8 @@
                         --initialize-at-run-time=io.netty.handler.codec.compression.Brotli 
                         --initialize-at-run-time=io.netty.handler.codec.compression.ZlibCodecFactory 
                         --initialize-at-run-time=io.netty.handler.codec.compression.Zstd
+
+                        --trace-class-initialization=io.netty.util.internal.CleanerJava9,io.netty.util.internal.PlatformDependent0,io.netty.util.internal.SystemPropertyUtil,io.netty.util.internal.PlatformDependent
                     </buildArgs>
                 </configuration>
             </plugin>
