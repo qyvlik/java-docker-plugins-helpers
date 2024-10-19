@@ -107,9 +107,7 @@
                     <imageName>${project.name}</imageName>
                     <mainClass>io.vertx.core.Launcher</mainClass>
                     <buildArgs>
-                        --no-fallback 
-                        -H:+UnlockExperimentalVMOptions  
-                        -H:Log=registerResource:3 
+                        --no-fallback
                         --initialize-at-run-time=io.netty.bootstrap.Bootstrap  
                         --initialize-at-run-time=io.netty.bootstrap.ChannelInitializerExtensions  
                         --initialize-at-run-time=io.netty.bootstrap.ServerBootstrap  
