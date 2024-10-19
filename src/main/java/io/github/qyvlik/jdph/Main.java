@@ -1,17 +1,10 @@
 package io.github.qyvlik.jdph;
 
 import io.github.qyvlik.jdph.examples.volume.ExampleVolumeDriver;
-import io.github.qyvlik.jdph.plugins.sdk.javalin.JavalinWebContainer;
 import io.github.qyvlik.jdph.plugins.sdk.vertx.VertxWebContainer;
 import io.github.qyvlik.jdph.plugins.volume.Server;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.Router;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.UnixDomainSocketAddress;
 
 public class Main {

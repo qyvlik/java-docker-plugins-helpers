@@ -23,12 +23,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin</artifactId>
-            <version>6.3.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.16</version>
@@ -85,6 +79,21 @@
                     <mainClass>io.github.qyvlik.jdph.Main</mainClass>
                     <buildArgs>
                         --no-fallback
+                        --initialize-at-run-time=io.netty.buffer.PooledByteBufAllocator
+                        --initialize-at-run-time=io.netty.buffer.UnpooledUnsafeDirectByteBuf
+                        --initialize-at-run-time=org.slf4j.simple.SimpleLogger
+                        --initialize-at-run-time=io.netty.buffer.ByteBufUtil
+                        --initialize-at-run-time=io.netty.buffer.UnpooledDirectByteBuf
+                        --initialize-at-run-time=io.netty.buffer.UnpooledUnsafeHeapByteBuf
+                        --initialize-at-run-time=io.netty.channel.DefaultFileRegion
+                        --initialize-at-run-time=io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf
+                        --initialize-at-run-time=org.slf4j.helpers.Reporter
+                        --initialize-at-run-time=io.netty.util.AbstractReferenceCounted
+                        --initialize-at-run-time=org.slf4j.LoggerFactory
+                        --initialize-at-run-time=io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeDirectByteBuf
+                        --initialize-at-run-time=io.netty.buffer.AbstractReferenceCountedByteBuf
+                        --initialize-at-run-time=io.netty.buffer.UnpooledHeapByteBuf
+                        --initialize-at-run-time=io.netty.handler.ssl.BouncyCastleAlpnSslUtils
                     </buildArgs>
                 </configuration>
 
