@@ -1,4 +1,4 @@
-FROM maven:3.9.6-amazoncorretto-17 as builder
+FROM vegardit/graalvm-maven:latest-java17 as builder
 
 WORKDIR /source
 
@@ -8,11 +8,11 @@ RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never
 
 ADD . /source
 
-RUN mvn -DskipTests package
+RUN mvn clean -DskipTests package
 
 # https://stackoverflow.com/questions/42208442/maven-docker-cache-dependencies
 
-FROM amazoncorretto:17-alpine3.17
+FROM ghcr.io/graalvm/jdk:java17
 
 WORKDIR /app
 
