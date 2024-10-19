@@ -2,10 +2,6 @@ FROM vegardit/graalvm-maven:latest-java17 as builder
 
 WORKDIR /source
 
-ADD pom.xml /source
-
-RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never"]
-
 ADD . /source
 
 RUN mvn clean -DskipTests package
