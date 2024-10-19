@@ -4,7 +4,7 @@ WORKDIR /source
 
 ADD . /source
 
-RUN mvn clean -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn clean -DskipTests package
 
 # https://stackoverflow.com/questions/42208442/maven-docker-cache-dependencies
 
