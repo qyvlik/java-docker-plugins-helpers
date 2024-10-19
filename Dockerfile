@@ -16,4 +16,4 @@ COPY --from=builder /source/target/java-docker-plugin-helpers-0.1.0.jar server.j
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dsun.net.httpserver.nodelay=true", "-jar", "/app/server.jar"]
+ENTRYPOINT /app/server.jar
