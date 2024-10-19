@@ -12,6 +12,17 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <vertx.version>4.3.5</vertx.version>
+
+        <graal.plugin.version>0.9.8</graal.plugin.version>
+        <vertx.plugin.version>1.0.22</vertx.plugin.version>
+        <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
+        <junit5.webclient.version>0.3.0</junit5.webclient.version>
+
+<!--        <vertx.verticle>vertx.APIClientVerticle</vertx.verticle>-->
+
+
     </properties>
 
     <dependencies>
@@ -61,44 +72,51 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.graalvm.nativeimage</groupId>
-                <artifactId>native-image-maven-plugin</artifactId>
-                <version>21.2.0</version>
+                <groupId>io.reactiverse</groupId>
+                <artifactId>vertx-maven-plugin</artifactId>
+                <version>${vertx.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>vmp</id>
+                        <goals>
+                            <goal>initialize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <redeploy>true</redeploy>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>${graal.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>native-image</goal>
+                            <goal>build</goal>
                         </goals>
                         <phase>package</phase>
                     </execution>
                 </executions>
-
                 <configuration>
-                    <skip>false</skip>
-                    <imageName>${project.artifactId}</imageName>
-                    <mainClass>io.github.qyvlik.jdph.Main</mainClass>
-                    <buildArgs>
-                        --no-fallback
-                        --initialize-at-run-time=io.netty.buffer.PooledByteBufAllocator
-                        --initialize-at-run-time=io.netty.buffer.UnpooledUnsafeDirectByteBuf
-                        --initialize-at-run-time=org.slf4j.simple.SimpleLogger
-                        --initialize-at-run-time=io.netty.buffer.ByteBufUtil
-                        --initialize-at-run-time=io.netty.buffer.UnpooledDirectByteBuf
-                        --initialize-at-run-time=io.netty.buffer.UnpooledUnsafeHeapByteBuf
-                        --initialize-at-run-time=io.netty.channel.DefaultFileRegion
-                        --initialize-at-run-time=io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf
-                        --initialize-at-run-time=org.slf4j.helpers.Reporter
-                        --initialize-at-run-time=io.netty.util.AbstractReferenceCounted
-                        --initialize-at-run-time=org.slf4j.LoggerFactory
-                        --initialize-at-run-time=io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeDirectByteBuf
-                        --initialize-at-run-time=io.netty.buffer.AbstractReferenceCountedByteBuf
-                        --initialize-at-run-time=io.netty.buffer.UnpooledHeapByteBuf
-                        --initialize-at-run-time=io.netty.handler.ssl.BouncyCastleAlpnSslUtils
-                    </buildArgs>
+                    <imageName>${project.name}</imageName>
+                    <mainClass>io.vertx.core.Launcher</mainClass>
+                    <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
                 </configuration>
-
-
             </plugin>
+<!--            <plugin>-->
+<!--                <artifactId>maven-failsafe-plugin</artifactId>-->
+<!--                <version>${failsafe.plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>integration-test</goal>-->
+<!--                            <goal>verify</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
