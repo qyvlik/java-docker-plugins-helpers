@@ -1,7 +1,7 @@
 {
   "resources": {
     "includes": [
-      {"pattern": "META-INF/io.github.qyvlik.jdph.*"}
+      {"pattern": "META-INF/qyvlik.github.io.jdph.*"}
     ],
     "excludes": [
     ]

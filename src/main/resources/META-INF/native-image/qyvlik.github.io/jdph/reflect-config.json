@@ -17,14 +17,86 @@
     "name": "java.lang.Integer",
     "allDeclaredConstructors": true
   },
-
   {
-    "name": "qyvlik.github.io.jdph.HTTPVerticle",
+    "name": "java.lang.Double",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.lang.String",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.Main",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
   },
   {
-    "name": "qyvlik.github.io.jdph.Main",
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.CreateRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.GetRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.MountRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.PathRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.RemoveRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.req.UnmountRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.CapabilitiesResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.ErrorResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.GetResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.ListResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.MountResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.resp.PathResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.Capability",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "qyvlik.github.io.jdph.plugins.volume.Volume",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
   }
