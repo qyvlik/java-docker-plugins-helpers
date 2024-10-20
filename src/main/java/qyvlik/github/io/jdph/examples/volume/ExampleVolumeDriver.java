@@ -1,4 +1,4 @@
-package qyvlik.github.io.jdph.volume;
+package qyvlik.github.io.jdph.examples.volume;
 
 import qyvlik.github.io.jdph.go.error;
 import qyvlik.github.io.jdph.go.ret;
