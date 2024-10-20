@@ -45,7 +45,19 @@ public class VertxWebContainer implements IWebContainer {
     @Override
     public void add(String path, IServerHandler handler) {
         router.post(path)
-                .handler(ctx -> handler.handle(this.warp(ctx)));
+                .handler(ctx -> {
+                    try {
+                        handler.handle(this.warp(ctx));
+                    } catch (Exception e) {
+                        if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                            e.printStackTrace();
+                        }
+                        if (!ctx.response().ended()) {
+                            ctx.response().setStatusCode(500);
+                            ctx.json(new ErrorResponse(e.getMessage()));
+                        }
+                    }
+                });
     }
 
     private IServerContext warp(RoutingContext ctx) {
