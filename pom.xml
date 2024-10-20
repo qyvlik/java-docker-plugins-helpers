@@ -13,49 +13,40 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <vertx.version>4.3.5</vertx.version>
+<!--        <vertx.version>4.3.5</vertx.version>-->
 
         <graal.plugin.version>0.9.8</graal.plugin.version>
         <vertx.plugin.version>1.0.22</vertx.plugin.version>
         <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
-        <junit5.webclient.version>0.3.0</junit5.webclient.version>
-
-<!--        <vertx.verticle>vertx.APIClientVerticle</vertx.verticle>-->
-
+<!--        <junit5.webclient.version>0.3.0</junit5.webclient.version>-->
 
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-stack-depchain</artifactId>
-                <version>${vertx.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>io.vertx</groupId>-->
+<!--                <artifactId>vertx-stack-depchain</artifactId>-->
+<!--                <version>${vertx.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
     <dependencies>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
+            <version>4.3.5</version>
         </dependency>
+
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.reactiverse</groupId>
-            <artifactId>reactiverse-junit5-web-client</artifactId>
-            <version>${junit5.webclient.version}</version>
-            <scope>test</scope>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.1.113.Final</version>
+            <scope>runtime</scope>
+            <classifier>osx-x86_64</classifier>
         </dependency>
 
     </dependencies>
@@ -92,7 +83,7 @@
                 </executions>
                 <configuration>
                     <imageName>${project.name}</imageName>
-                    <mainClass>io.vertx.core.Launcher</mainClass>
+                    <mainClass>io.github.qyvlik.jdph.Main</mainClass>
                     <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
                 </configuration>
             </plugin>

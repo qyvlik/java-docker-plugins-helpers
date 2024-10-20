@@ -22,5 +22,10 @@
     "name": "io.github.qyvlik.jdph.HTTPVerticle",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.qyvlik.jdph.Main",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
   }
 ]
