@@ -15,7 +15,7 @@
     }
   ],
   "Interface": {
-    "Socket": "/run/docker/plugins/jdph.sock",
+    "Socket": "jdph.sock",
     "Types": [
       "docker.volumedriver/1.0"
     ]

@@ -7,7 +7,7 @@ create:
 	docker export jdph | tar -x -C plugin/rootfs/
 	docker rm -vf jdph
 	docker plugin create jdph:$(VERSION) ./plugin
-	docker rmi --force jdph-rfi
+	# docker rmi --force jdph-rfi
 
 enable:
 	docker plugin enable jdph:$(VERSION)

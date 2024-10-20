@@ -13,6 +13,6 @@ import java.net.UnixDomainSocketAddress;
 public class Main {
     public static void main(String[] args) throws IOException {
         Server server = new Server(new ExampleVolumeDriver(), new VertxWebContainer());
-        server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph.sock"));
+        server.start(UnixDomainSocketAddress.of("jdph.sock"));
     }
 }
