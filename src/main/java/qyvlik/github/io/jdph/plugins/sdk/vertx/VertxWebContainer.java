@@ -97,7 +97,7 @@ public class VertxWebContainer implements IWebContainer {
 
 curl \
 --unix-socket /tmp/jdph.sock \
---location 'http://localhost:8080/VolumeDriver.Create' \
+--location 'http://localhost/VolumeDriver.Create' \
 --header 'Content-Type: application/json' \
 --data '{
     "Name": "Hello"
@@ -105,7 +105,15 @@ curl \
 
 curl \
 --unix-socket /tmp/jdph.sock \
---location 'http://localhost:8080/VolumeDriver.Get' \
+--location 'http://localhost/VolumeDriver.Get' \
+--header 'Content-Type: application/json' \
+--data '{
+    "Name": "Hello"
+}'
+
+
+curl --unix-socket /tmp/jdph.sock \
+--location 'http://localhost/VolumeDriver.Unmount' \
 --header 'Content-Type: application/json' \
 --data '{
     "Name": "Hello"
