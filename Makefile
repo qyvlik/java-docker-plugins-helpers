@@ -3,7 +3,7 @@ VERSION ?= 0.1.0
 create:
 	docker build -t jdph-volume-rfi .
 	docker create --name jdph-volume jdph-volume-rfi
-	mkdir -p plugin/rootfs/
+	mkdir -p jdph-volume/plugin/rootfs/
 	docker export jdph-volume | tar -x -C jdph-volume/plugin/rootfs/
 	docker rm -vf jdph-volume
 	docker plugin create jdph-volume:$(VERSION) ./jdph-volume/plugin
