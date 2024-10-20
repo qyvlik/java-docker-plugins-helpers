@@ -11,6 +11,6 @@ public class JDPHVolumeMain {
 
     public static void main(String[] args) throws IOException {
         Server server = new Server(new JDPHVolumeDriver(), new VertxWebContainer());
-        server.start(UnixDomainSocketAddress.of("/tmp/jdph-volume.sock"));
+        server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph-volume.sock"));
     }
 }

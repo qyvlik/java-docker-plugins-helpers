@@ -4,6 +4,8 @@ WORKDIR /source
 
 ADD . /source
 
+# RUN mvn verify clean --fail-never
+
 RUN --mount=type=cache,target=/root/.m2 mvn -e clean -DskipTests package
 
 FROM alpine:3.20.3
