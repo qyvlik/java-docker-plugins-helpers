@@ -26,6 +26,10 @@
     "allDeclaredConstructors": true
   },
   {
+    "name": "java.nio.DirectByteBuffer",
+    "allDeclaredConstructors": true
+  },
+  {
     "name": "qyvlik.github.io.jdph.Main",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
