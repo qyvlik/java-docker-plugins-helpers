@@ -4,8 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.qyvlik</groupId>
-    <artifactId>java-docker-plugin-helpers</artifactId>
+    <groupId>qyvlik.github.io</groupId>
+    <artifactId>jdph</artifactId>
+    <description>Java Docker Plugins Helpers</description>
     <version>0.1.0</version>
 
     <properties>
@@ -83,7 +84,7 @@
                 </executions>
                 <configuration>
                     <imageName>${project.name}</imageName>
-                    <mainClass>io.github.qyvlik.jdph.Main</mainClass>
+                    <mainClass>qyvlik.github.io.jdph.Main</mainClass>
                     <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
                 </configuration>
             </plugin>

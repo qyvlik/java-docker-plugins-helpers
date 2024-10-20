@@ -19,12 +19,12 @@
   },
 
   {
-    "name": "io.github.qyvlik.jdph.HTTPVerticle",
+    "name": "qyvlik.github.io.jdph.HTTPVerticle",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
   },
   {
-    "name": "io.github.qyvlik.jdph.Main",
+    "name": "qyvlik.github.io.jdph.Main",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
   }

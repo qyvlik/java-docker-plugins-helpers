@@ -1,4 +1,4 @@
-package io.github.qyvlik.jdph;
+package qyvlik.github.io.jdph;
 
 import io.vertx.core.AbstractVerticle;
 
