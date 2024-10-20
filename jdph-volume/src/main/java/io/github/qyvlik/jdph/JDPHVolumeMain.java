@@ -12,7 +12,13 @@ import java.net.UnixDomainSocketAddress;
 public class JDPHVolumeMain {
 
     public static void main(String[] args) throws IOException {
-        System.setOut(new PrintStream(new File("/var/log/plugin.log")));
+        String logFile = System.getenv("LOG_FILE");
+        if (logFile != null && !logFile.isBlank()) {
+            var ps = new PrintStream(logFile);
+            System.setOut(ps);
+            System.setErr(ps);
+        }
+
         Server server = new Server(new JDPHVolumeDriver(), new VertxWebContainer());
         server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph-volume.sock"));
     }

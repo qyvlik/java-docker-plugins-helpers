@@ -12,6 +12,14 @@
         "value"
       ],
       "Value": "true"
+    },
+    {
+      "Description": "Logging file",
+      "Name": "LOG_FILE",
+      "Settable": [
+        "value"
+      ],
+      "Value": "/var/log/plugin.log"
     }
   ],
   "Interface": {
