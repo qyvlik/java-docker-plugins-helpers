@@ -1,6 +1,7 @@
 package io.github.qyvlik.jdph.plugins.volume;
 
 
+import io.github.qyvlik.jdph.plugins.manifest;
 import io.github.qyvlik.jdph.plugins.sdk.IWebContainer;
 import io.github.qyvlik.jdph.plugins.volume.req.*;
 
@@ -16,6 +17,9 @@ public class Server {
     public Server(final Driver driver, final IWebContainer container) {
         this.driver = driver;
         this.container = container;
+
+        container.add("/Plugin.Activate", ctx -> ctx.write(manifest.VOLUME));
+
         container.add("/VolumeDriver.Create", ctx -> {
             var req = ctx.read(CreateRequest.class);
             var err = this.driver.Create(req);

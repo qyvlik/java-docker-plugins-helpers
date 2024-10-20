@@ -88,5 +88,10 @@
     "name": "io.github.qyvlik.jdph.plugins.volume.Volume",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.qyvlik.jdph.plugins.manifest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
   }
 ]
