@@ -52,7 +52,11 @@ public class VertxWebContainer implements IWebContainer {
         return new IServerContext() {
             @Override
             public <REQ> REQ read(Class<REQ> requestClazz) {
-                return ctx.body().asPojo(requestClazz);
+                var body = ctx.body();
+                System.out.printf("DEBUG=%s read class = %s, body =%s \n", System.getenv("DEBUG"), requestClazz.getName(), body);
+//                if("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+//                }
+                return body.asPojo(requestClazz);
             }
 
             @Override
