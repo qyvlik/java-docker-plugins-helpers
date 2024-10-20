@@ -80,7 +80,7 @@ public class VertxWebContainer implements IWebContainer {
 //        server.requestHandler(router).listen(SocketAddress.domainSocketAddress(address.toString()));
 
         server.requestHandler(router)
-                .listen(SocketAddress.domainSocketAddress("/tmp/jdph.sock"))
+                .listen(SocketAddress.domainSocketAddress(address.toString()))
                 .andThen(new Handler<AsyncResult<HttpServer>>() {
                     @Override
                     public void handle(AsyncResult<HttpServer> event) {
