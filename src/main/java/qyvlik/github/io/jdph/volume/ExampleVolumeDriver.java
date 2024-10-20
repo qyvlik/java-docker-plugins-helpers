@@ -106,7 +106,7 @@ public class ExampleVolumeDriver implements Driver {
         if (this.volumes.contains(request.Name())) {
             return null;
         }
-        return error.Create("");
+        return error.Create("no such volume");
     }
 
     @Override

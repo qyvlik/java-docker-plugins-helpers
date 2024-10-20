@@ -12,8 +12,8 @@ FROM ghcr.io/graalvm/jdk:java17
 
 WORKDIR /app
 
-COPY --from=builder /source/target/java-docker-plugin-helpers-0.1.0.jar server.jar
+COPY --from=builder /source/target/jdph jdph
 
 EXPOSE 8080
 
-ENTRYPOINT /app/server.jar
+ENTRYPOINT /app/jdph
