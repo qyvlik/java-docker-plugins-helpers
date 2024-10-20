@@ -1,0 +1,37 @@
+{
+  "Description": "A docker volume plugin developed using Java",
+  "Documentation": "https://docs.docker.com/engine/extend/plugins/",
+  "Entrypoint": [
+    "/app/jdph-volume"
+  ],
+  "Env": [
+    {
+      "Description": "Enable debug logging",
+      "Name": "DEBUG",
+      "Settable": [
+        "value"
+      ],
+      "Value": "0"
+    }
+  ],
+  "Interface": {
+    "Socket": "jdph-volume.sock",
+    "Types": [
+      "docker.volumedriver/1.0"
+    ]
+  },
+  "Linux": {
+    "Capabilities": [
+      "CAP_SYS_ADMIN"
+    ],
+    "AllowAllDevices": false,
+    "Devices": null
+  },
+  "Mounts": null,
+  "PropagatedMount": "/docker/plugins/data/secrets",
+  "Network": {
+    "Type": "host"
+  },
+  "User": {},
+  "Workdir": ""
+}
