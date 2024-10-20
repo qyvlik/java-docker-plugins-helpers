@@ -16,9 +16,9 @@
 
 <!--        <vertx.version>4.3.5</vertx.version>-->
 
-        <graal.plugin.version>0.9.8</graal.plugin.version>
-        <vertx.plugin.version>1.0.22</vertx.plugin.version>
-        <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
+        <graal.plugin.version>0.10.3</graal.plugin.version>
+        <vertx.plugin.version>2.0.1</vertx.plugin.version>
+        <failsafe.plugin.version>3.5.1</failsafe.plugin.version>
 <!--        <junit5.webclient.version>0.3.0</junit5.webclient.version>-->
 
     </properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>4.3.5</version>
+            <version>4.5.10</version>
         </dependency>
 
         <dependency>
@@ -77,7 +77,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>build</goal>
+                            <goal>compile-no-fork</goal>
                         </goals>
                         <phase>package</phase>
                     </execution>
