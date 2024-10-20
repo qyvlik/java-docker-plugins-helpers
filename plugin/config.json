@@ -1,5 +1,5 @@
 {
-  "Description": "A docker volume plugin to manage secrets from remote secrets managers",
+  "Description": "A docker volume plugin developed using Java",
   "Documentation": "https://docs.docker.com/engine/extend/plugins/",
   "Entrypoint": [
     "/app/jdph"
