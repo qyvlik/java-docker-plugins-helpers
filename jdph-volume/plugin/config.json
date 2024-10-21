@@ -36,7 +36,7 @@
     "Devices": null
   },
   "Mounts": null,
-  "PropagatedMount": "/docker/plugins/data/secrets",
+  "PropagatedMount": "/data/jdph-volume/volumes",
   "Network": {
     "Type": "host"
   },

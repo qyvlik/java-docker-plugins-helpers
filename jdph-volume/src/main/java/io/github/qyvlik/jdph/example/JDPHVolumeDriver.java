@@ -1,15 +1,23 @@
 package io.github.qyvlik.jdph.example;
 
 
+import io.github.qyvlik.jdph.beard.Renderer;
 import io.github.qyvlik.jdph.go.error;
 import io.github.qyvlik.jdph.go.ret;
+import io.github.qyvlik.jdph.plugins.volume.Capability;
 import io.github.qyvlik.jdph.plugins.volume.Driver;
+import io.github.qyvlik.jdph.plugins.volume.Volume;
 import io.github.qyvlik.jdph.plugins.volume.req.*;
 import io.github.qyvlik.jdph.plugins.volume.resp.*;
-import io.github.qyvlik.jdph.plugins.volume.*;
+import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
+/**
+ * other example see <a href="https://github.com/intesar/SampleDockerVolumePlugin/blob/master/src/main/java/com/dchq/docker/volume/driver/adaptor/LocalVolumeAdaptorImpl.java">LocalVolumeAdaptorImpl</a>
+ */
 public class JDPHVolumeDriver implements Driver {
     private Set<String> volumes;
     private int create;
@@ -21,23 +29,59 @@ public class JDPHVolumeDriver implements Driver {
     private int remove;
     private int capabilities;
 
+    public static final String VOLUME_MOUNT_POINT = "volumes";
+    public static final String STATE_MOUNT_POINT = "states";
+
+    private final Map<String, Renderer> renderers;
+
+    public JDPHVolumeDriver(String dataRootPath) {
+        if (Path.of(dataRootPath, VOLUME_MOUNT_POINT).toFile().mkdirs()) {
+            throw new IllegalStateException(String.format("%s create volume path error !", dataRootPath));
+        }
+        if (Path.of(dataRootPath, STATE_MOUNT_POINT).toFile().mkdirs()) {
+            throw new IllegalStateException(String.format("%s create volume path error !", dataRootPath));
+        }
+        this.renderers = new ConcurrentSkipListMap<>();
+    }
+
     public JDPHVolumeDriver() {
-        this.volumes = new TreeSet<>();
-        this.create = 0;
-        this.get = 0;
-        this.list = 0;
-        this.path = 0;
-        this.mount = 0;
-        this.unmount = 0;
-        this.remove = 0;
-        this.capabilities = 0;
+        this("/data/jdph-volume");
     }
 
     // curl -d '{"Name": "Hello"}' -H "Content-Type: application/json" -X POST http://localhost:8080/VolumeDriver.Create
     @Override
     public error Create(CreateRequest request) {
-        this.create++;
-        this.volumes.add(request.Name());
+
+
+        for (Map.Entry<String, String> entry : request.Opts().entrySet()) {
+            if (entry.getKey().equals("secret.source")) {
+                String secretSource = entry.getValue();
+            }
+            if (entry.getKey().equals("secret.content-type")) {
+                String secretContentType = entry.getValue();
+            }
+            if (entry.getKey().startsWith("template.content.")) {
+                String app = StringUtils.removeStart(entry.getKey(), "mustache.content.");
+                String mustacheContent = entry.getValue();
+            }
+            if (entry.getKey().startsWith("template.output.")) {
+                String app = StringUtils.removeEnd(entry.getKey(), "mustache.output.");
+                String mustacheOutput = entry.getValue();
+            }
+        }
+
+
+        this.renderers.compute(request.Name(), (key, oldRenderer) -> {
+            boolean renew = oldRenderer == null;
+            Renderer renderer = renew ? new Renderer() : oldRenderer;
+            renderer.clear();
+
+
+
+            return renew ? renderer : null;
+        });
+
+
         return null;
     }
 
