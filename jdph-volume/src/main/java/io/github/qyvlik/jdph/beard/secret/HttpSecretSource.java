@@ -1,7 +1,4 @@
-package io.github.qyvlik.jdph.beard.impl;
-
-import io.github.qyvlik.jdph.beard.SecretContentType;
-import io.github.qyvlik.jdph.beard.SecretSource;
+package io.github.qyvlik.jdph.beard.secret;
 
 import java.io.IOException;
 import java.net.URI;

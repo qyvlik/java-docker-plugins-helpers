@@ -1,4 +1,4 @@
-package io.github.qyvlik.jdph.beard;
+package io.github.qyvlik.jdph.beard.secret;
 
 import java.util.List;
 
