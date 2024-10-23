@@ -58,9 +58,6 @@ public class JDPHVolumeDriver implements Driver {
                     Path.of(dataPath, STATE_MOUNT_POINT, Name + ".json").toFile()
             );
         } catch (IOException e) {
-            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
-                e.printStackTrace(System.out);
-            }
             return ret.failure("%s %s volume, read file failure : %s", action, Name, e.getMessage());
         }
 
@@ -109,7 +106,7 @@ public class JDPHVolumeDriver implements Driver {
 
         try {
             byte[] jsonBytes = mapper.writeValueAsBytes(
-                    new Volume(request.Name(), Mountpoint.toString(), CreatedAt, Map.of())
+                    new Volume(request.Name(), request.Name(), CreatedAt, Map.of())
             );
             FileUtils.writeByteArrayToFile(
                     Path.of(dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile(),
@@ -169,7 +166,8 @@ public class JDPHVolumeDriver implements Driver {
         }
 
         try {
-            FileUtils.forceDelete(Path.of(r.result().Volume().Mountpoint()).toFile());
+            Path Mountpoint = Path.of(dataPath, VOLUME_MOUNT_POINT, request.Name());
+            FileUtils.forceDelete(Mountpoint.toFile());
         } catch (Exception e) {
             if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
                 e.printStackTrace(System.out);

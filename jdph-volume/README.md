@@ -3,8 +3,6 @@
 ## jdph-volume use case
 
 ```yaml
-version: '3'
-
 services:
  busybox:
   image: busybox

@@ -46,6 +46,7 @@ public class Renderer {
             if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
                 e.printStackTrace(System.out);
             }
+            // java.nio.channels.UnresolvedAddressException
             System.out.printf("create secret source failure :%s \n", e.getMessage());
             return null;
         }

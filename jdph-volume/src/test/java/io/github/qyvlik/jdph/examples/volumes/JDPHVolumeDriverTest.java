@@ -31,20 +31,19 @@ class JDPHVolumeDriverTest {
         )));
 
 
-
         Assertions.assertNull(err);
 
         get = driver.Get(new GetRequest(Name));
 
         Assertions.assertNull(get.err());
         Assertions.assertEquals(Name, get.result().Volume().Name());
-        Assertions.assertEquals(String.format("%s/volumes/%s", dataPath, Name), get.result().Volume().Mountpoint());
+        Assertions.assertEquals(Name, get.result().Volume().Mountpoint());
 
         ret<MountResponse> mount = driver.Mount(new MountRequest(Name, "0x123456"));
         Assertions.assertNotNull(mount);
         Assertions.assertNull(mount.err());
         Assertions.assertNotNull(mount.result());
-        Assertions.assertEquals(String.format("%s/volumes/%s", dataPath, Name), mount.result().Mountpoint());
+        Assertions.assertEquals(Name, mount.result().Mountpoint());
 
         ret<ListResponse> list = driver.List();
         Assertions.assertNotNull(list);
