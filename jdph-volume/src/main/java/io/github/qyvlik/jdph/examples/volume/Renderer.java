@@ -29,7 +29,6 @@ public class Renderer {
     }
 
 
-
     public void add(Template template) {
         Mustache mustache = this.factory.compile(new StringReader(template.template()), template.app());
         this.renderings.put(template.app(), new Rendering(mustache, template.output()));
@@ -80,9 +79,18 @@ public class Renderer {
     }
 
     public void write(Path prefix, Map<String, Output> outputs) throws IOException {
-        for(Output output : outputs.values()) {
+        for (Map.Entry<String, Output> entry : outputs.entrySet()) {
+            String app = entry.getKey();
+            Output output = entry.getValue();
+
+            Path path = Path.of(prefix.toString(), output.filename());
+
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                System.out.printf("render then %s write to %s \n", app, path);
+            }
+
             FileUtils.write(
-                    Path.of(prefix.toString(), output.filename()).toFile(),
+                    path.toFile(),
                     output.content(),
                     StandardCharsets.UTF_8
             );
