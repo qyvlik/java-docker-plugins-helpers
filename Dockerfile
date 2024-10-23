@@ -16,4 +16,4 @@ COPY --from=builder /source/jdph-volume/target/jdph-volume-0.1.0.jar jdph-volume
 
 EXPOSE 8080
 
-ENTRYPOINT java -jar /app/www/jdph-volume.jar
+ENTRYPOINT java -jar /app/jdph-volume.jar

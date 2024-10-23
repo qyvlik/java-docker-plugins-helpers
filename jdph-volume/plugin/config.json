@@ -4,7 +4,7 @@
   "Entrypoint": [
     "java",
     "-jar",
-    "/app/www/jdph-volume.jar"
+    "/app/jdph-volume.jar"
   ],
   "Env": [
     {
