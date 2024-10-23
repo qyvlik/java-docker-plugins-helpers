@@ -38,7 +38,7 @@
   "Mounts": null,
   "PropagatedMount": "/data/jdph-volume/volumes",
   "Network": {
-    "Type": "bridge"
+    "Type": "host"
   },
   "User": {},
   "Workdir": ""
