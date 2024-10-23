@@ -19,7 +19,7 @@ public class JDPHVolumeMain {
             System.setErr(ps);
         }
 
-        Server server = new Server(new JDPHVolumeDriver(), new VertxWebContainer());
-        server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph-volume.sock"));
+//        Server server = new Server(new JDPHVolumeDriver(), new VertxWebContainer());
+//        server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph-volume.sock"));
     }
 }

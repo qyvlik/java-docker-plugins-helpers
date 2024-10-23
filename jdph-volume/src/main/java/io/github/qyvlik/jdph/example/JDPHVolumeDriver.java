@@ -1,12 +1,10 @@
 package io.github.qyvlik.jdph.example;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.qyvlik.jdph.beard.BeardUtils;
 import io.github.qyvlik.jdph.beard.render.Output;
 import io.github.qyvlik.jdph.beard.render.Renderer;
-import io.github.qyvlik.jdph.beard.secret.HttpSecretSource;
-import io.github.qyvlik.jdph.beard.secret.SecretContentType;
-import io.github.qyvlik.jdph.beard.secret.SecretSource;
 import io.github.qyvlik.jdph.go.error;
 import io.github.qyvlik.jdph.go.ret;
 import io.github.qyvlik.jdph.plugins.volume.Capability;
@@ -14,55 +12,43 @@ import io.github.qyvlik.jdph.plugins.volume.Driver;
 import io.github.qyvlik.jdph.plugins.volume.Volume;
 import io.github.qyvlik.jdph.plugins.volume.req.*;
 import io.github.qyvlik.jdph.plugins.volume.resp.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.net.URI;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * other example see <a href="https://github.com/intesar/SampleDockerVolumePlugin/blob/master/src/main/java/com/dchq/docker/volume/driver/adaptor/LocalVolumeAdaptorImpl.java">LocalVolumeAdaptorImpl</a>
  */
 public class JDPHVolumeDriver implements Driver {
-    private Set<String> volumes;
-    private int create;
-    private int get;
-    private int list;
-    private int path;
-    private int mount;
-    private int unmount;
-    private int remove;
-    private int capabilities;
-
     public static final String VOLUME_MOUNT_POINT = "volumes";
     public static final String STATE_MOUNT_POINT = "states";
 
     private final Map<String, Renderer> renderers;
 
-    private final String dataRootPath;
+    private final String dataPath;
 
-    public JDPHVolumeDriver(String dataRootPath) {
-        if (Path.of(dataRootPath, VOLUME_MOUNT_POINT).toFile().mkdirs()) {
-            throw new IllegalStateException(String.format("%s create volume path error !", dataRootPath));
+    public JDPHVolumeDriver(String dataPath) {
+        if (!StringUtils.startsWith(dataPath, "/")) {
+            throw new IllegalArgumentException("data path not starts with /");
         }
-        if (Path.of(dataRootPath, STATE_MOUNT_POINT).toFile().mkdirs()) {
-            throw new IllegalStateException(String.format("%s create volume path error !", dataRootPath));
+        Path volumePath = Path.of(dataPath, VOLUME_MOUNT_POINT);
+        if (!volumePath.toFile().exists() && !volumePath.toFile().mkdirs()) {
+            throw new IllegalStateException(String.format("%s create volume path error !", dataPath));
         }
-        this.dataRootPath = dataRootPath;
+        Path statePath = Path.of(dataPath, STATE_MOUNT_POINT);
+        if (!statePath.toFile().exists() && !statePath.toFile().mkdirs()) {
+            throw new IllegalStateException(String.format("%s create volume path error !", dataPath));
+        }
+        this.dataPath = dataPath;
         this.renderers = new ConcurrentSkipListMap<>();
-    }
-
-    public JDPHVolumeDriver() {
-        this("/data/jdph-volume");
-    }
-
-    private SecretSource create(String secretSource, String secretContentType) {
-        try {
-            return new HttpSecretSource(URI.create(secretSource), SecretContentType.valueOf(secretContentType));
-        } catch (Exception e) {
-            System.out.printf("create secret source failure :%s \n", e.getMessage());
-            return null;
-        }
     }
 
     @Override
@@ -76,91 +62,104 @@ public class JDPHVolumeDriver implements Driver {
             return error.Create("create %s volume, render failure : %s", request.Name(), e.getMessage());
         }
 
-        Path prefix = Path.of(dataRootPath, VOLUME_MOUNT_POINT, request.Name());
+        Path Mountpoint = Path.of(dataPath, VOLUME_MOUNT_POINT, request.Name());
         try {
-            BeardUtils.write(prefix, outputs);
+            BeardUtils.write(Mountpoint, outputs);
         } catch (Exception e) {
-            return error.Create("create %s volume, write failure : %s", request.Name(), e.getMessage());
+            return error.Create("create %s volume, write files failure : %s", request.Name(), e.getMessage());
         }
 
-        // todo write to state
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            byte[] jsonBytes = mapper.writeValueAsBytes(
+                    new Volume(request.Name(), Mountpoint.toString(), BeardUtils.nowUTC(), Map.of())
+            );
+
+            FileUtils.writeByteArrayToFile(
+                    Path.of(dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile(),
+                    jsonBytes
+            );
+
+        } catch (IOException e) {
+            return error.Create("create %s volume, write state failure : %s", request.Name(), e.getMessage());
+        }
 
         return null;
     }
 
     @Override
     public ret<GetResponse> Get(GetRequest request) {
-        this.get++;
-        if (this.volumes.contains(request.Name())) {
-            return ret.success(new GetResponse(new Volume(
-                    request.Name(),
-                    null,
-                    null,
-                    null
-            )));
-        }
-        return ret.failure("no such volume");
+        return BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Get");
     }
-
 
     // curl -d '{}' -H "Content-Type: application/json" -X POST http://localhost:8080/VolumeDriver.List
     @Override
     public ret<ListResponse> List() {
-        this.list++;
         List<Volume> volumeList = new ArrayList<>();
-        for (String name : this.volumes) {
-            volumeList.add(new Volume(
-                    name,
-                    null,
-                    null,
-                    null
-            ));
+
+        File dir = Path.of(dataPath, STATE_MOUNT_POINT).toFile();
+        File[] files = dir.listFiles((dir1, name) -> StringUtils.endsWith(name, ".json"));
+        if (files != null) {
+            for (File file : files) {
+                String Name = StringUtils.removeEnd(file.getName(), ".json");
+                ret<GetResponse> ret = BeardUtils.getVolumeFromState(dataPath, STATE_MOUNT_POINT, Name, "List");
+                if (ret.err() == null) {
+                    volumeList.add(ret.result().Volume());
+                }
+            }
         }
+
         return ret.success(new ListResponse(Collections.unmodifiableList(volumeList)));
     }
 
 
     @Override
     public error Remove(RemoveRequest request) {
-        this.remove++;
-        if (this.volumes.contains(request.Name())) {
-            this.volumes.remove(request.Name());
-            return null;
+
+        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Remove");
+        if (r.err() != null) {
+            return r.err();
         }
-        return error.Create("no such volume");
+        try {
+            FileUtils.forceDelete(Path.of(r.result().Volume().Mountpoint()).toFile());
+        } catch (Exception e) {
+            return error.Create("Remove %s volume, delete file : failure %s", request.Name(), e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
     public ret<PathResponse> Path(PathRequest request) {
-        this.path++;
-        if (this.volumes.contains(request.Name())) {
-            return ret.success(new PathResponse(null));
+        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Path");
+        if (r.err() != null) {
+            return ret.failure(r.err());
         }
-        return ret.failure("no such volume");
+        return ret.success(new PathResponse(r.result().Volume().Mountpoint()));
     }
 
     @Override
     public ret<MountResponse> Mount(MountRequest request) {
-        this.mount++;
-        if (this.volumes.contains(request.Name())) {
-            return ret.success(new MountResponse(null));
+        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Mount");
+        if (r.err() != null) {
+            return ret.failure(r.err());
         }
 
-        return ret.failure("no such volume");
+        return ret.success(new MountResponse(r.result().Volume().Mountpoint()));
     }
 
     @Override
     public error Unmount(UnmountRequest request) {
-        this.unmount++;
-        if (this.volumes.contains(request.Name())) {
-            return null;
+        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Unmount");
+        if (r.err() != null) {
+            return r.err();
         }
-        return error.Create("no such volume");
+        return null;
     }
 
     @Override
     public CapabilitiesResponse Capabilities() {
-        this.capabilities++;
         return new CapabilitiesResponse(new Capability("local"));
     }
 }

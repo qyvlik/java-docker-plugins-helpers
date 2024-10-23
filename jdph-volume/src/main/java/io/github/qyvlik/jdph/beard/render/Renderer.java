@@ -55,9 +55,9 @@ public class Renderer {
         Map<String, Template> templates = new TreeMap<>();
         for (Map.Entry<String, String> entry : options.entrySet()) {
             if (entry.getKey().startsWith("template.content.")) {
-                String app = StringUtils.removeStart(entry.getKey(), "mustache.content.");
+                String app = StringUtils.removeStart(entry.getKey(), "template.content.");
                 String mustacheContent = entry.getValue();
-                String mustacheOutput = options.get(String.format("mustache.output.%s", app));
+                String mustacheOutput = options.get(String.format("template.output.%s", app));
                 if (StringUtils.isBlank(mustacheOutput)) {
                     mustacheOutput = app;
                 }
