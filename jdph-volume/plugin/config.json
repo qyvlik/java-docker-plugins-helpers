@@ -2,7 +2,9 @@
   "Description": "A docker volume plugin developed using Java",
   "Documentation": "https://docs.docker.com/engine/extend/plugins/",
   "Entrypoint": [
-    "/app/jdph-volume"
+    "java",
+    "-jar",
+    "/app/www/jdph-volume.jar"
   ],
   "Env": [
     {

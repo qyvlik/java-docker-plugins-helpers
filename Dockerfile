@@ -1,4 +1,4 @@
-FROM vegardit/graalvm-maven:latest-java17 as builder
+FROM maven:3.9.2-amazoncorretto-17
 
 WORKDIR /source
 
@@ -8,14 +8,12 @@ ADD . /source
 
 RUN --mount=type=cache,target=/root/.m2 mvn -e clean -DskipTests package
 
-FROM alpine:3.20.3
-
-RUN apk update && apk add --no-cache gcompat libstdc++
+FROM amazoncorretto:17-alpine3.17
 
 WORKDIR /app
 
-COPY --from=builder /source/jdph-volume/target/jdph-volume jdph-volume
+COPY --from=builder /source/jdph-volume/target/jdph-volume-0.1.0.jar jdph-volume.jar
 
 EXPOSE 8080
 
-ENTRYPOINT /app/jdph-volume
+ENTRYPOINT java -jar /app/www/jdph-volume.jar
