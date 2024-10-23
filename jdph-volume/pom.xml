@@ -93,7 +93,7 @@
                 </executions>
                 <configuration>
                     <imageName>${project.name}</imageName>
-                    <mainClass>io.github.qyvlik.jdph.JDPHVolumeMain</mainClass>
+                    <mainClass>io.github.qyvlik.jdph.examples.JDPHVolumeMain</mainClass>
                     <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
                 </configuration>
             </plugin>

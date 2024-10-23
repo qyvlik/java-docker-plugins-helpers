@@ -1,5 +1,28 @@
 # jdph-volume
 
+## jdph-volume use case
+
+```yaml
+version: '3'
+
+services:
+ busybox:
+  image: busybox
+  command: "ls /run/secrets"
+  volumes:
+    - apps_secret:/run/secrets:ro
+
+volumes:
+ apps_secret:
+    driver: jdph-volume
+    driver_opts:
+        "secret.source": https://api.github.com/zen
+        "secret.content-type": text # or json
+        "template.content.app1": |
+          API_GITHUB_ZEN={{.}}
+        "template.output.app1": application.properties   # app1/application.properties
+```
+
 ## debugging
 
 ```bash

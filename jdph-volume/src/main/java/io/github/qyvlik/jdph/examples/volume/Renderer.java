@@ -1,16 +1,16 @@
-package io.github.qyvlik.jdph.beard.render;
+package io.github.qyvlik.jdph.examples.volume;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.github.mustachejava.SafeMustacheFactory;
-import io.github.qyvlik.jdph.beard.secret.HttpSecretSource;
-import io.github.qyvlik.jdph.beard.secret.SecretContentType;
-import io.github.qyvlik.jdph.beard.secret.SecretSource;
 import io.github.qyvlik.jdph.plugins.volume.req.CreateRequest;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +68,16 @@ public class Renderer {
         SecretSource source = secretSource(secretSource, secretContentType);
 
         return this.render(templates, source);
+    }
+
+    public void write(Path prefix, Map<String, Output> outputs) throws IOException {
+        for(Output output : outputs.values()) {
+            FileUtils.write(
+                    Path.of(prefix.toString(), output.filename()).toFile(),
+                    output.content(),
+                    StandardCharsets.UTF_8
+            );
+        }
     }
 
     public Map<String, Output> render(Map<String, Template> templates, SecretSource secretSource) throws IOException {

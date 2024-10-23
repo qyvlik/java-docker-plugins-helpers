@@ -1,10 +1,7 @@
-package io.github.qyvlik.jdph.example;
+package io.github.qyvlik.jdph.examples.volume;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.qyvlik.jdph.beard.BeardUtils;
-import io.github.qyvlik.jdph.beard.render.Output;
-import io.github.qyvlik.jdph.beard.render.Renderer;
 import io.github.qyvlik.jdph.go.error;
 import io.github.qyvlik.jdph.go.ret;
 import io.github.qyvlik.jdph.plugins.volume.Capability;
@@ -18,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +51,27 @@ public class JDPHVolumeDriver implements Driver {
         this.renderers = new ConcurrentSkipListMap<>();
     }
 
+    public ret<GetResponse> getVolume(String Name, String action) {
+        byte[] volumeBytes = null;
+        try {
+            volumeBytes = FileUtils.readFileToByteArray(
+                    Path.of(dataPath, STATE_MOUNT_POINT, Name + ".json").toFile()
+            );
+        } catch (IOException e) {
+            return ret.failure("%s %s volume, read file failure : %s", action, Name, e.getMessage());
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        Volume volume = null;
+        try {
+            volume = mapper.readValue(volumeBytes, Volume.class);
+        } catch (IOException e) {
+            return ret.failure("%s %s volume, parse json failure : %s", action, Name, e.getMessage());
+        }
+
+        return ret.success(new GetResponse(volume));
+    }
+
     @Override
     public error Create(CreateRequest request) {
         Renderer renderer = this.renderers.computeIfAbsent(request.Name(), (k) -> new Renderer());
@@ -64,23 +85,24 @@ public class JDPHVolumeDriver implements Driver {
 
         Path Mountpoint = Path.of(dataPath, VOLUME_MOUNT_POINT, request.Name());
         try {
-            BeardUtils.write(Mountpoint, outputs);
+            renderer.write(Mountpoint, outputs);
         } catch (Exception e) {
             return error.Create("create %s volume, write files failure : %s", request.Name(), e.getMessage());
         }
 
+        ObjectMapper mapper = new ObjectMapper();
+        String CreatedAt = ZonedDateTime
+                .now(Clock.systemUTC())
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+
         try {
-            ObjectMapper mapper = new ObjectMapper();
-
             byte[] jsonBytes = mapper.writeValueAsBytes(
-                    new Volume(request.Name(), Mountpoint.toString(), BeardUtils.nowUTC(), Map.of())
+                    new Volume(request.Name(), Mountpoint.toString(), CreatedAt, Map.of())
             );
-
             FileUtils.writeByteArrayToFile(
                     Path.of(dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile(),
                     jsonBytes
             );
-
         } catch (IOException e) {
             return error.Create("create %s volume, write state failure : %s", request.Name(), e.getMessage());
         }
@@ -90,7 +112,7 @@ public class JDPHVolumeDriver implements Driver {
 
     @Override
     public ret<GetResponse> Get(GetRequest request) {
-        return BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Get");
+        return getVolume(request.Name(), "Get");
     }
 
     // curl -d '{}' -H "Content-Type: application/json" -X POST http://localhost:8080/VolumeDriver.List
@@ -103,7 +125,7 @@ public class JDPHVolumeDriver implements Driver {
         if (files != null) {
             for (File file : files) {
                 String Name = StringUtils.removeEnd(file.getName(), ".json");
-                ret<GetResponse> ret = BeardUtils.getVolumeFromState(dataPath, STATE_MOUNT_POINT, Name, "List");
+                ret<GetResponse> ret = this.getVolume(Name, "List");
                 if (ret.err() == null) {
                     volumeList.add(ret.result().Volume());
                 }
@@ -117,10 +139,17 @@ public class JDPHVolumeDriver implements Driver {
     @Override
     public error Remove(RemoveRequest request) {
 
-        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Remove");
+        ret<GetResponse> r = this.getVolume(request.Name(), "Remove");
         if (r.err() != null) {
             return r.err();
         }
+
+        try {
+            FileUtils.forceDelete(Path.of(this.dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile());
+        } catch (Exception e) {
+            return error.Create("Remove %s volume, delete state : failure %s", request.Name(), e.getMessage());
+        }
+
         try {
             FileUtils.forceDelete(Path.of(r.result().Volume().Mountpoint()).toFile());
         } catch (Exception e) {
@@ -132,7 +161,7 @@ public class JDPHVolumeDriver implements Driver {
 
     @Override
     public ret<PathResponse> Path(PathRequest request) {
-        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Path");
+        ret<GetResponse> r = this.getVolume(request.Name(), "Path");
         if (r.err() != null) {
             return ret.failure(r.err());
         }
@@ -141,7 +170,7 @@ public class JDPHVolumeDriver implements Driver {
 
     @Override
     public ret<MountResponse> Mount(MountRequest request) {
-        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Mount");
+        ret<GetResponse> r = this.getVolume(request.Name(), "Mount");
         if (r.err() != null) {
             return ret.failure(r.err());
         }
@@ -151,7 +180,7 @@ public class JDPHVolumeDriver implements Driver {
 
     @Override
     public error Unmount(UnmountRequest request) {
-        ret<GetResponse> r = BeardUtils.getVolumeFromState(this.dataPath, STATE_MOUNT_POINT, request.Name(), "Unmount");
+        ret<GetResponse> r = this.getVolume(request.Name(), "Unmount");
         if (r.err() != null) {
             return r.err();
         }

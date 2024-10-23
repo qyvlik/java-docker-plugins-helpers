@@ -1,14 +1,11 @@
-package io.github.qyvlik.jdph.example.beard;
+package io.github.qyvlik.jdph.examples.volumes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.github.mustachejava.SafeMustacheFactory;
-import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
