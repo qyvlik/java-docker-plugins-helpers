@@ -1,4 +1,4 @@
-FROM maven:3.9.2-amazoncorretto-17
+FROM maven:3.9.2-amazoncorretto-17 as builder
 
 WORKDIR /source
 
