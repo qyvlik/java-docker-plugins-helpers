@@ -58,6 +58,9 @@ public class JDPHVolumeDriver implements Driver {
                     Path.of(dataPath, STATE_MOUNT_POINT, Name + ".json").toFile()
             );
         } catch (IOException e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return ret.failure("%s %s volume, read file failure : %s", action, Name, e.getMessage());
         }
 
@@ -66,6 +69,9 @@ public class JDPHVolumeDriver implements Driver {
         try {
             volume = mapper.readValue(volumeBytes, Volume.class);
         } catch (IOException e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return ret.failure("%s %s volume, parse json failure : %s", action, Name, e.getMessage());
         }
 

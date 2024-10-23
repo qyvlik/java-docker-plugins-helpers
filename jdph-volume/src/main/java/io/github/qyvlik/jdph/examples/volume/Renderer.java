@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,9 @@ public class Renderer {
         try {
             return new HttpSecretSource(URI.create(secretSource), SecretContentType.valueOf(secretContentType));
         } catch (Exception e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             System.out.printf("create secret source failure :%s \n", e.getMessage());
             return null;
         }
@@ -66,6 +70,10 @@ public class Renderer {
         }
 
         SecretSource source = secretSource(secretSource, secretContentType);
+
+        if (source == null) {
+            throw new RemoteException(String.format("render failure : fetch %s error", secretSource));
+        }
 
         return this.render(templates, source);
     }
