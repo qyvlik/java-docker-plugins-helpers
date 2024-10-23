@@ -14,7 +14,7 @@ services:
 
 volumes:
  apps_secret:
-    driver: jdph-volume
+    driver: jdph-volume:0.1.0
     driver_opts:
         "secret.source": https://api.github.com/zen
         "secret.content-type": text # or json
@@ -46,8 +46,13 @@ curl \
 --location 'http://localhost/VolumeDriver.Create' \
 --header 'Content-Type: application/json' \
 --data '{
-    "Name": "Hello",
-    "Opts": null
+  "Name":"demo_apps_secret",
+  "Opts":{
+    "secret.content-type":"text",
+    "secret.source":"https://api.github.com/zen",
+    "template.content.app1":"API_GITHUB_ZEN={{.}}\n",
+    "template.output.app1":"application.properties"
+  }
 }'
 
 curl \

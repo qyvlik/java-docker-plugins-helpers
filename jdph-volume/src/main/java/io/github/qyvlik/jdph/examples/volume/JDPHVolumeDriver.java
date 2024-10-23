@@ -80,6 +80,9 @@ public class JDPHVolumeDriver implements Driver {
         try {
             outputs = renderer.render(request);
         } catch (Exception e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return error.Create("create %s volume, render failure : %s", request.Name(), e.getMessage());
         }
 
@@ -87,6 +90,9 @@ public class JDPHVolumeDriver implements Driver {
         try {
             renderer.write(Mountpoint, outputs);
         } catch (Exception e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return error.Create("create %s volume, write files failure : %s", request.Name(), e.getMessage());
         }
 
@@ -104,6 +110,9 @@ public class JDPHVolumeDriver implements Driver {
                     jsonBytes
             );
         } catch (IOException e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return error.Create("create %s volume, write state failure : %s", request.Name(), e.getMessage());
         }
 
@@ -147,12 +156,18 @@ public class JDPHVolumeDriver implements Driver {
         try {
             FileUtils.forceDelete(Path.of(this.dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile());
         } catch (Exception e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return error.Create("Remove %s volume, delete state : failure %s", request.Name(), e.getMessage());
         }
 
         try {
             FileUtils.forceDelete(Path.of(r.result().Volume().Mountpoint()).toFile());
         } catch (Exception e) {
+            if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                e.printStackTrace(System.out);
+            }
             return error.Create("Remove %s volume, delete file : failure %s", request.Name(), e.getMessage());
         }
 
