@@ -50,7 +50,7 @@ public class VertxWebContainer implements IWebContainer {
                         handler.handle(this.warp(ctx));
                     } catch (Exception e) {
                         if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
-                            e.printStackTrace();
+                            e.printStackTrace(System.out);
                         }
                         if (!ctx.response().ended()) {
                             ctx.response().setStatusCode(500);
@@ -66,18 +66,24 @@ public class VertxWebContainer implements IWebContainer {
             public <REQ> REQ read(Class<REQ> requestClazz) {
                 var body = ctx.body();
                 if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
-                    System.out.printf("read class = %s, body =%s \n", requestClazz.getName(), body.asString());
+                    System.out.printf("read class = %s, body =%s \n", requestClazz.getSimpleName(), body.asString());
                 }
                 return body.asPojo(requestClazz);
             }
 
             @Override
             public <RESP> void write(RESP respBody) {
+                if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                    System.out.printf("resp ok write class = %s, body =%s \n", respBody.getClass().getSimpleName(), respBody);
+                }
                 ctx.json(respBody);
             }
 
             @Override
             public void write(error err) {
+                if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
+                    System.out.printf("resp error =%s \n", err.Error());
+                }
                 ctx.response().setStatusCode(500);
                 ctx.json(new ErrorResponse(err.Error()));
             }
@@ -93,12 +99,11 @@ public class VertxWebContainer implements IWebContainer {
     public void start(UnixDomainSocketAddress address) throws IOException {
         server.requestHandler(router)
                 .listen(SocketAddress.domainSocketAddress(address.toString()))
-                .andThen(new Handler<AsyncResult<HttpServer>>() {
-                    @Override
-                    public void handle(AsyncResult<HttpServer> event) {
-                        if (event.failed()) {
-                            event.cause().printStackTrace();
-                        }
+                .andThen(event -> {
+                    if (event.failed()) {
+                        event.cause().printStackTrace(System.out);
+                    } else {
+                        System.out.printf("startup server at %s", address);
                     }
                 })
         ;

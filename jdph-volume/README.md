@@ -26,7 +26,7 @@ volumes:
 ```bash
 sudo runc --root /run/docker/runtime-runc/plugins.moby list
 sudo runc --root /run/docker/runtime-runc/plugins.moby exec 54630a1eaa99dee9d6e138e13ac9d60face9667c027d0755979526bea7c82145 cat /var/log/plugin.log
-sudo runc --root /run/docker/runtime-runc/plugins.moby exec -t 54630a1eaa99dee9d6e138e13ac9d60face9667c027d0755979526bea7c82145 sh
+sudo runc --root /run/docker/runtime-runc/plugins.moby exec -t a179ce572880c33ff67310681329e1492ffa8bb58c60d70ee48c277808c032c7 sh
 
 ```
 

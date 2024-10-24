@@ -106,7 +106,7 @@ public class JDPHVolumeDriver implements Driver {
 
         try {
             byte[] jsonBytes = mapper.writeValueAsBytes(
-                    new Volume(request.Name(), request.Name(), CreatedAt, Map.of())
+                    new Volume(request.Name(), Mountpoint.toString(), CreatedAt, Map.of())
             );
             FileUtils.writeByteArrayToFile(
                     Path.of(dataPath, STATE_MOUNT_POINT, request.Name() + ".json").toFile(),
