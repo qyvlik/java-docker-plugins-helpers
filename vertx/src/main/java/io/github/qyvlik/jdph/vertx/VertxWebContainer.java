@@ -39,7 +39,6 @@ public class VertxWebContainer implements IWebContainer {
         );
 
         this.router.route().handler(new BodyHandlerImpl());
-
     }
 
     @Override

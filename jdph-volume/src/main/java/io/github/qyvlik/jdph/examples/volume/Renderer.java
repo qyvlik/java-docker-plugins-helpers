@@ -83,7 +83,7 @@ public class Renderer {
             String app = entry.getKey();
             Output output = entry.getValue();
 
-            Path path = Path.of(prefix.toString(), output.filename());
+            Path path = Path.of(prefix.toString(), app, output.filename());
 
             if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
                 System.out.printf("render then %s write to %s \n", app, path);
