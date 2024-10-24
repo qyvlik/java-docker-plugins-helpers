@@ -18,7 +18,7 @@ public class JDPHVolumeMain {
         }
 
         if ("true".equalsIgnoreCase(System.getenv("DEBUG"))) {
-            Server server = new Server(new JDPHVolumeDriver("/data/jdph-volume"), new VertxWebContainer());
+            Server server = new Server(new JDPHVolumeDriver("/jdph-volume"), new VertxWebContainer());
             server.start(UnixDomainSocketAddress.of("/run/docker/plugins/jdph-volume.sock"));
         } else {
             // local dev

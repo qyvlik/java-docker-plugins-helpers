@@ -1,47 +1,45 @@
 {
-  "Description": "A docker volume plugin developed using Java",
-  "Documentation": "https://docs.docker.com/engine/extend/plugins/",
-  "Entrypoint": [
+  "description": "A docker volume plugin developed using Java",
+  "documentation": "https://docs.docker.com/engine/extend/plugins/",
+  "entrypoint": [
     "java",
     "-jar",
     "/app/jdph-volume.jar"
   ],
-  "Env": [
+  "env": [
     {
-      "Description": "Enable debug logging",
-      "Name": "DEBUG",
-      "Settable": [
+      "description": "Enable debug logging",
+      "name": "DEBUG",
+      "settable": [
         "value"
       ],
-      "Value": "true"
+      "value": "true"
     },
     {
-      "Description": "Logging file",
-      "Name": "LOG_FILE",
-      "Settable": [
+      "description": "Logging file",
+      "name": "LOG_FILE",
+      "settable": [
         "value"
       ],
-      "Value": "/var/log/plugin.log"
+      "value": "/var/log/plugin.log"
     }
   ],
-  "Interface": {
-    "Socket": "jdph-volume.sock",
-    "Types": [
+  "interface": {
+    "socket": "jdph-volume.sock",
+    "types": [
       "docker.volumedriver/1.0"
     ]
   },
-  "Linux": {
-    "Capabilities": [
+  "linux": {
+    "capabilities": [
       "CAP_SYS_ADMIN"
     ],
-    "AllowAllDevices": false,
-    "Devices": null
+    "allowAllDevices": false,
+    "devices": null
   },
-  "Mounts": null,
-  "PropagatedMount": "/data/jdph-volume/volumes",
-  "Network": {
-    "Type": "host"
-  },
-  "User": {},
-  "Workdir": ""
+  "mounts": null,
+  "propagatedmount": "/jdph-volume",
+  "network": {
+    "type": "host"
+  }
 }
