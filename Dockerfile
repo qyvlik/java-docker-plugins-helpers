@@ -12,7 +12,7 @@ FROM amazoncorretto:17-alpine3.17
 
 WORKDIR /app
 
-COPY --from=builder /source/jdph-volume/target/jdph-volume-0.1.0.jar jdph-volume.jar
+COPY --from=builder /source/jdph-volume/target/jdph-volume-0.1.0-jar-with-dependencies.jar jdph-volume.jar
 
 EXPOSE 8080
 
