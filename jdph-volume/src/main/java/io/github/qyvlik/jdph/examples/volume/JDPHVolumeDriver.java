@@ -102,7 +102,7 @@ public class JDPHVolumeDriver implements Driver {
         ObjectMapper mapper = new ObjectMapper();
         String CreatedAt = ZonedDateTime
                 .now(Clock.systemUTC())
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
         try {
             byte[] jsonBytes = mapper.writeValueAsBytes(

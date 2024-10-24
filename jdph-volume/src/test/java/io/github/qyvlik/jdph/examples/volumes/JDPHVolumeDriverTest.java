@@ -10,9 +10,23 @@ import io.github.qyvlik.jdph.plugins.volume.resp.MountResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 class JDPHVolumeDriverTest {
+
+    @Test
+    public void testTime() {
+
+        String CreatedAt = ZonedDateTime
+                .now(Clock.systemUTC())
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+
+        System.out.println(CreatedAt);
+    }
+
     @Test
     public void test() {
         final String dataPath = "/tmp/jdph-volume";
