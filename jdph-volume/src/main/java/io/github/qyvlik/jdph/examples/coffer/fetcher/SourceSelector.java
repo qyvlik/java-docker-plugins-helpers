@@ -97,7 +97,7 @@ public class SourceSelector {
             return new AwsSecretsManagerFetcher(
                     contentType,
                     awsCredential.accessKeyId(),
-                    awsCredential.secretKeyId(),
+                    awsCredential.secretAccessKey(),
                     region,
                     secretName,
                     proxy
