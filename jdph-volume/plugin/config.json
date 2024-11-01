@@ -8,6 +8,14 @@
   ],
   "env": [
     {
+      "name": "credential",
+      "description": "Credential",
+      "settable": [
+        "value"
+      ],
+      "value": ""
+    },
+    {
       "description": "Enable debug logging",
       "name": "DEBUG",
       "settable": [
@@ -21,7 +29,7 @@
       "settable": [
         "value"
       ],
-      "value": "/var/log/plugin.log"
+      "value": "/var/log/coffer.log"
     }
   ],
   "interface": {
