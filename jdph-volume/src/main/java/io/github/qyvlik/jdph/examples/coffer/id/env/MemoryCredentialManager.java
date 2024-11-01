@@ -15,6 +15,9 @@ public class MemoryCredentialManager implements CredentialManager {
     public static MemoryCredentialManager create(Map<String, String> envs, String prefix) {
         MemoryCredentialManager m = new MemoryCredentialManager();
         for (Map.Entry<String, String> entry : envs.entrySet()) {
+            if (StringUtils.isBlank(entry.getValue())) {
+                continue;
+            }
             if (!StringUtils.startsWith(entry.getKey(), prefix)) {
                 continue;
             }
