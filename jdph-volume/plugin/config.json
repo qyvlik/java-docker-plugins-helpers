@@ -8,7 +8,7 @@
   ],
   "env": [
     {
-      "name": "credential.rsa",
+      "name": "credential_rsa",
       "description": "credential.rsa=rsa|base64(private_key_file_content)|base64(passphrase)",
       "settable": [
         "value"
@@ -16,7 +16,7 @@
       "value": ""
     },
     {
-      "name": "credential.aws",
+      "name": "credential_aws",
       "description": "credential.aws=aws|$access_key_id|$secret_access_key",
       "settable": [
         "value"

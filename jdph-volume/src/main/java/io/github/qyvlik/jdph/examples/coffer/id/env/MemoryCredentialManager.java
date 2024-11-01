@@ -10,7 +10,7 @@ public class MemoryCredentialManager implements CredentialManager {
 
     private final Map<String, Credential> credentials;
 
-    public static final String CREDENTIAL_PREFIX = "credential.";
+    public static final String CREDENTIAL_PREFIX = "credential_";
 
     public static MemoryCredentialManager create(Map<String, String> envs, String prefix) {
         MemoryCredentialManager m = new MemoryCredentialManager();
