@@ -57,6 +57,58 @@
             <version>2.16.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>secretsmanager</artifactId>
+            <version>2.25.31</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>apache-client</artifactId>
+            <groupId>software.amazon.awssdk</groupId>
+            <version>2.25.31</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>7.0.0.202409031743-r</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
+            <version>7.0.0.202409031743-r</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.12</version>
+        </dependency>
+
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.eclipse.jgit</groupId>-->
+        <!--            <artifactId>org.eclipse.jgit.ssh.apache</artifactId>-->
+        <!--            <version>7.0.0.202409031743-r</version>-->
+        <!--        </dependency>-->
+
 
     </dependencies>
 
@@ -99,22 +151,60 @@
     <!--        </plugins>-->
     <!--    </build>-->
 
+    <!--    <build>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-assembly-plugin</artifactId>-->
+    <!--                <executions>-->
+    <!--                    <execution>-->
+    <!--                        <id>make-assembly</id>-->
+    <!--                        &lt;!&ndash; 绑定到package生命周期 &ndash;&gt;-->
+    <!--                        <phase>package</phase>-->
+    <!--                        <goals>-->
+    <!--                            &lt;!&ndash; 只运行一次 &ndash;&gt;-->
+    <!--                            <goal>single</goal>-->
+    <!--                        </goals>-->
+    <!--                    </execution>-->
+    <!--                </executions>-->
+    <!--                <configuration>-->
+    <!--                    <descriptorRefs>-->
+    <!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
+    <!--                    </descriptorRefs>-->
+    <!--                    <archive>-->
+    <!--                        <manifest>-->
+    <!--                            <mainClass>io.github.qyvlik.jdph.examples.JDPHVolumeMain</mainClass>-->
+    <!--                        </manifest>-->
+    <!--                    </archive>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </build>-->
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+
+                <configuration>
+                    <!--                    <parameters>${maven.compiler.parameters}</parameters>-->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.34</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <!-- 绑定到package生命周期 -->
-                        <phase>package</phase>
-                        <goals>
-                            <!-- 只运行一次 -->
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>3.7.1</version>
+
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -125,8 +215,21 @@
                         </manifest>
                     </archive>
                 </configuration>
+
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
             </plugin>
+
         </plugins>
+
     </build>
 
 </project>
