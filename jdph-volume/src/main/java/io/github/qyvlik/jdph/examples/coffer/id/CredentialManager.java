@@ -3,7 +3,6 @@ package io.github.qyvlik.jdph.examples.coffer.id;
 import io.github.qyvlik.jdph.examples.coffer.fetcher.aws.AwsCredential;
 import io.github.qyvlik.jdph.examples.coffer.fetcher.git.SSHKeyCredential;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public interface CredentialManager {
@@ -14,7 +13,7 @@ public interface CredentialManager {
         switch (type) {
             case rsa -> {
                 byte[] prvKeyContent = Base64.getDecoder().decode(array[1]);
-                byte[] prvKeyPassphrase = array.length == 3 ? Base64.getDecoder().decode(array[2]): null;
+                byte[] prvKeyPassphrase = array.length == 3 ? Base64.getDecoder().decode(array[2]) : null;
                 this.add(id, new SSHKeyCredential(id, prvKeyContent, prvKeyPassphrase));
             }
             case aws -> {
